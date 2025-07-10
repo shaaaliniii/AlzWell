@@ -45,6 +45,11 @@ AlzWell is a machine learning-based diagnostic tool for the early detection of A
 
 ---
 
+## 📚 Research References
+OASIS-3: MRI Dataset used
+
+Related IEEE Papers on early Alzheimer's detection via ML
+
 ## 🧪 How to Run
 
 1. Clone the repo:
@@ -76,10 +81,6 @@ AlzWell is a machine learning-based diagnostic tool for the early detection of A
 ![unnamed (5)](https://github.com/user-attachments/assets/f5746937-c5f8-40b6-9200-4fd6bfe16434)
 ![unnamed (6)](https://github.com/user-attachments/assets/f0c6130c-58ab-4479-ad31-8a990ed26a87)
 <img width="379" height="512" alt="unnamed (2)" src="https://github.com/user-attachments/assets/0839c4a4-bbd4-4b2e-98b6-e6b73f0d7ca9" />
-
-
-
-
 
 
 ## 🙋‍♀️ Author
