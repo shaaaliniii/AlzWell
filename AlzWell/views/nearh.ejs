@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nearby Hospitals</title>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.16.0/mapbox-gl.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        
+        header {
+            text-align: center;
+            padding: 10px;
+            background-color: #007acc;
+            color: white;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        
+        .container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        #map {
+            flex: 2;
+            height: 100%;
+        }
+        
+        #list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+            background-color: #f4f4f4;
+            border-left: 1px solid #ddd;
+        }
+        
+        #list h2 {
+            margin-top: 0;
+            color: #333;
+            font-size: 1.2em;
+        }
+        
+        .hospital-item {
+            padding: 10px;
+            margin-bottom: 5px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        
+        .hospital-item:hover {
+            transform: scale(1.02);
+            background-color: #e6f7ff;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #f1f1f1;
+            font-size: 0.9em;
+            color: #555;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <header>Nearby Hospitals</header>
+    <div class="container">
+        <div id="map"></div>
+        <div id="list">
+            <h2>Hospital List</h2>
+        </div>
+    </div>
+    <footer>&copy; 2024 Nearby Hospitals</footer>
+    
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+    
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1IjoiaWNlLWJlYXIiLCJhIjoiY2xzNXUyZWtyMWo4eDJqbzN6NjZwZmdseSJ9.o139wwZER4wqMr2jFPinvw';
+        let map, userLocation;
+
+        function initMap() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    userLocation = [position.coords.longitude, position.coords.latitude];
+                    initializeMap(userLocation);
+                }, (error) => {
+                    console.error("Geolocation error:", error);
+                    alert("Geolocation failed! Using default location.");
+                    userLocation = [77.1025, 28.7041]; // Default to New Delhi
+                    initializeMap(userLocation);
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        function initializeMap(location) {
+            map = new mapboxgl.Map({
+                container: 'map',
+                style: 'mapbox://styles/mapbox/streets-v12',
+                center: location,
+                zoom: 12
+            });
+            new mapboxgl.Marker({ color: 'blue' })
+                .setLngLat(location)
+                .setPopup(new mapboxgl.Popup().setHTML("<b>You are here</b>"))
+                .addTo(map);
+            findNearbyHospitals(location);
+        }
+
+        function findNearbyHospitals(location) {
+            const [lon, lat] = location;
+            const radius = 50000;
+            const url = `https://overpass-api.de/api/interpreter?data=[out:json];node["amenity"="hospital"](around:${radius},${lat},${lon});out;`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const hospitals = data.elements;
+                    const listDiv = document.getElementById('list');
+                    listDiv.innerHTML = "<h2>Hospitals Nearby:</h2>";
+
+                    if (hospitals.length === 0) {
+                        listDiv.innerHTML += "<p>No hospitals found nearby.</p>";
+                        return;
+                    }
+
+                    hospitals.forEach(hospital => {
+                        const hospitalName = hospital.tags.name || "Unnamed Hospital";
+                        const item = document.createElement('div');
+                        item.className = 'hospital-item';
+                        item.textContent = hospitalName;
+                        item.onclick = () => map.flyTo({ center: [hospital.lon, hospital.lat], zoom: 16 });
+                        listDiv.appendChild(item);
+
+                        
+                    });
+                })
+                .catch(error => {
+                    console.error("Error fetching hospitals:", error);
+                    alert("Failed to fetch hospital data.");
+                });
+        }
+
+        initMap();
+    </script>
+</body>
+</html>

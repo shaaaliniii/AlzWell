@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alzheimer's Prediction</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f8ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .form-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 400px;
+        }
+        h1 {
+            text-align: center;
+            color: #4c6ef5;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        .input-group label {
+            display: block;
+            font-weight: bold;
+            color: #333;
+        }
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .upload-btn {
+            background-color: #4c6ef5;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+        .upload-btn:hover {
+            background-color: #385ac6;
+        }
+        .result {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 18px;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f4f4f4;
+        }
+        .result.mild {
+            background-color: #ffeb3b;
+        }
+        .result.dementia {
+            background-color: #ff5722;
+            color: white;
+        }
+        .result.non-dementia {
+            background-color: #4caf50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h1>Alzheimer's Prediction</h1>
+    <form id="predictionForm">
+        <!-- Age -->
+        <div class="input-group">
+            <label for="age">Age</label>
+            <input type="number" id="age" name="age" placeholder="Enter your age" required>
+        </div>
+
+        <!-- Gender -->
+        <div class="input-group">
+            <label for="gender">Gender</label>
+            <select id="gender" name="gender" required>
+                <option value="">Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+
+        <!-- Family History -->
+        <div class="input-group">
+            <label for="familyHistory">Family History of Alzheimer's</label>
+            <select id="familyHistory" name="familyHistory" required>
+                <option value="">Select</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+        </div>
+
+        <!-- Cognitive Test Score -->
+        <div class="input-group">
+            <label for="cognitiveScore">Cognitive Test Score (MMSE / MoCA)</label>
+            <input type="number" id="cognitiveScore" name="cognitiveScore" placeholder="Enter score" required>
+        </div>
+
+        <!-- MRI Image Upload -->
+        <div class="input-group">
+            <label for="mriImage">Upload MRI Image</label>
+            <input type="file" id="mriImage" name="mriImage" accept="image/*" required>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="upload-btn">Predict Alzheimer's</button>
+    </form>
+
+    <!-- Prediction Result -->
+    <div id="predictionResult" class="result"></div>
+</div>
+
+<script>
+    document.getElementById("predictionForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        // Collecting form data
+        const age = document.getElementById("age").value;
+        const gender = document.getElementById("gender").value;
+        const familyHistory = document.getElementById("familyHistory").value;
+        const cognitiveScore = document.getElementById("cognitiveScore").value;
+        const mriImage = document.getElementById("mriImage").files.length;
+
+        let resultMessage = "";
+        let resultClass = "";
+
+        // Simulate 5-second delay before prediction
+        setTimeout(function() {
+            if (cognitiveScore<21) {
+                resultMessage = "Mildly Dementiated";
+                resultClass = "mild";
+            } else if ( mriImage >30) {
+                resultMessage = "Dementiated";
+                resultClass = "dementia";
+            } else {
+                resultMessage = "Non-Dementiated";
+                resultClass = "non-dementia";
+            }
+
+            // Display the result
+            const resultElement = document.getElementById("predictionResult");
+            resultElement.textContent = resultMessage;
+            resultElement.className = `result ${resultClass}`;
+        }, 5000); // Wait for 5 seconds before showing the result
+    });
+</script>
+
+</body>
+</html>
