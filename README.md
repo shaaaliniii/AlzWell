@@ -1,4 +1,4 @@
-# 🧠 AlzWell: Alzheimer's Disease Detection System
+# 🧠 YARN: Alzheimer's Disease Detection System
 
 AlzWell is a machine learning-based diagnostic tool for the early detection of Alzheimer's disease using MRI scans. The project leverages deep learning techniques to analyze brain imaging data and predict the likelihood of Alzheimer's, aiming to assist doctors and researchers with accurate, non-invasive analysis.
 
